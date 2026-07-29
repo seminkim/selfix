@@ -351,7 +351,7 @@ def denoise_selfix(
         trace.setdefault("delta", delta)
         trace.setdefault("inverse_steps", [])
 
-    final_img_history: list[Tensor] = []
+    final_img_history: list[Tensor] = [img]
     final_dt_history: list[float] = []
     prev_velocity = None
     record_latent_trajectory(info, inverse, timesteps[0], img)

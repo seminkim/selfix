@@ -423,7 +423,6 @@ def denoise_selfix(
             }
 
         base_momentum_state = guess.clone()
-        anchor_momentum_state = None
         for k in range(num_iterations):
             pred_next, info = model(
                 img=guess,
@@ -443,11 +442,8 @@ def denoise_selfix(
                 alpha = selfix_alpha(k, alpha1, delta)
                 anchor_update = anchor
 
-            if anchor_momentum_state is None:
-                anchor_momentum_state = anchor_update
             base_momentum_state = momentum * base_momentum_state + (1 - momentum) * projected
-            anchor_momentum_state = momentum * anchor_momentum_state + (1 - momentum) * anchor_update
-            updated_guess = (1 - alpha) * base_momentum_state + alpha * anchor_momentum_state
+            updated_guess = (1 - alpha) * base_momentum_state + alpha * anchor_update
             step_delta = (updated_guess - guess).abs().mean().item()
             residual = (projected - img).abs().mean().item()
             if step_trace is not None:
